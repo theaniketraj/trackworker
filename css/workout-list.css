@@ -1,0 +1,345 @@
+/* Workout List */
+.workout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Exercise Block */
+.exercise-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+
+.exercise-block.selected {
+  border-color: var(--primary);
+  background: rgba(255, 77, 0, 0.05);
+}
+
+.exercise-block.sortable-ghost {
+  opacity: 0.5;
+  background: var(--border);
+}
+
+.drag-handle {
+  color: var(--text-muted);
+  cursor: grab;
+  padding: 4px;
+  margin-top: 2px;
+  font-size: 20px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.exercise-content {
+  flex: 1;
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.exercise-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.exercise-target {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.remove-btn:hover {
+  color: var(--danger);
+}
+
+/* Controls Area */
+.exercise-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sets-reps-input {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mini-input {
+  background: var(--screen-bg);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  width: 60px;
+  text-align: center;
+  font-family: inherit;
+}
+
+.mini-input:focus {
+  outline: 1px solid var(--primary);
+  border-color: var(--primary);
+}
+
+.input-label {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Intensity Selector */
+.intensity-selector {
+  display: flex;
+  background: var(--screen-bg);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  width: fit-content;
+}
+
+.intensity-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.intensity-btn.active {
+  background: var(--surface-hover);
+  color: var(--text-main);
+}
+
+.intensity-btn.active.high {
+  color: var(--primary);
+}
+
+.intensity-btn.active.med {
+  color: #ffb700;
+}
+
+.intensity-btn.active.low {
+  color: var(--success);
+}
+
+.intensity-btn:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+/* Rest Timer Chip */
+.rest-timer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--screen-bg);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rest-timer-chip:hover {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+.rest-timer-chip i {
+  font-size: 14px;
+  color: var(--primary);
+}
+
+/* Sets & Logging */
+.set-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--screen-bg);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.set-row.header-row {
+  background: transparent;
+  border-color: transparent;
+  padding: 0 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.set-number {
+  background: var(--surface-hover);
+  color: var(--text-muted);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.log-input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 16px;
+  width: 60px;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  outline: none;
+}
+
+.log-input:focus {
+  border-bottom: 1px solid var(--primary);
+}
+
+.log-input:disabled {
+  color: var(--text-muted);
+}
+
+.check-btn {
+  background: var(--surface-hover);
+  border: none;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.set-row.completed {
+  background: rgba(0, 204, 102, 0.1);
+  border-color: rgba(0, 204, 102, 0.3);
+}
+
+.set-row.completed .check-btn {
+  background: var(--success);
+  color: white;
+}
+
+.exercise-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.action-btn {
+  flex: 1;
+  background: var(--screen-bg);
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.delete-set-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-set-btn:hover {
+  background: var(--surface-hover);
+  color: var(--danger);
+}
+
+.exercise-note {
+  margin-top: 4px;
+}
+
+.exercise-note.hidden {
+  display: none;
+}
+
+.note-input {
+  width: 100%;
+  background: var(--screen-bg);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.note-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}

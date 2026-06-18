@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout Builder</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- SortableJS for Drag and Drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  </head>
+
+  <body>
+    <div class="app-container">
+      <!-- Calendar Modal -->
+      <div class="modal-overlay" id="calendarModal">
+        <div class="calendar-modal">
+          <div class="calendar-header">
+            <button class="calendar-nav-btn" id="prevMonth">
+              <i class="ph ph-caret-left"></i>
+            </button>
+            <div class="calendar-title" id="calendarTitle">May 2026</div>
+            <button class="calendar-nav-btn" id="nextMonth">
+              <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+          <div class="calendar-grid">
+            <div class="day-name">Su</div>
+            <div class="day-name">Mo</div>
+            <div class="day-name">Tu</div>
+            <div class="day-name">We</div>
+            <div class="day-name">Th</div>
+            <div class="day-name">Fr</div>
+            <div class="day-name">Sa</div>
+          </div>
+          <div class="calendar-grid" id="calendarDays">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+      <!-- Custom Exercise Modal -->
+      <div class="modal-overlay" id="customExModal">
+        <div class="calendar-modal">
+          <div class="calendar-header">
+            <div class="calendar-title">Custom Exercise</div>
+            <button class="calendar-nav-btn close-modal">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+          <form id="customExForm" class="onboarding-form">
+            <div class="input-group">
+              <label for="ceName">Exercise Name</label>
+              <input
+                type="text"
+                id="ceName"
+                required
+                placeholder="e.g., Weighted Planks"
+              />
+            </div>
+            <div class="input-group">
+              <label for="ceTarget">Target Area</label>
+              <input
+                type="text"
+                id="ceTarget"
+                required
+                placeholder="e.g., Core"
+              />
+            </div>
+            <div class="input-group">
+              <label for="ceStyle">Tracking Style</label>
+              <select
+                id="ceStyle"
+                style="
+                  background: var(--surface);
+                  color: var(--text-main);
+                  padding: 16px;
+                  border-radius: var(--radius-md);
+                  border: 1px solid var(--border);
+                  outline: none;
+                  font-family: inherit;
+                "
+              >
+                <option value="weight_reps">Weight & Reps</option>
+                <option value="duration">Duration (Seconds)</option>
+                <option value="bodyweight_reps">
+                  Bodyweight & Reps (No Weight)
+                </option>
+              </select>
+            </div>
+            <button type="submit" class="save-cta" style="margin-top: 16px">
+              Add to Workout
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Profile Modal -->
+      <div class="modal-overlay" id="profileModal">
+        <div class="calendar-modal">
+          <div class="calendar-header">
+            <div class="calendar-title">Profile Info</div>
+            <button class="calendar-nav-btn close-modal">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+          <div
+            class="profile-details"
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 16px;
+              margin-bottom: 24px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 8px;
+              "
+            >
+              <span style="color: var(--text-muted); font-size: 14px"
+                >Name</span
+              >
+              <span
+                id="profileNameDisplay"
+                style="font-weight: 600; color: var(--text-main)"
+                >-</span
+              >
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 8px;
+              "
+            >
+              <span style="color: var(--text-muted); font-size: 14px">Age</span>
+              <span
+                id="profileAgeDisplay"
+                style="font-weight: 600; color: var(--text-main)"
+                >-</span
+              >
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 8px;
+              "
+            >
+              <span style="color: var(--text-muted); font-size: 14px"
+                >Weight</span
+              >
+              <span
+                id="profileWeightDisplay"
+                style="font-weight: 600; color: var(--text-main)"
+                >-</span
+              >
+            </div>
+          </div>
+          <button
+            id="deleteAccountBtn"
+            class="save-cta"
+            style="
+              background: var(--danger);
+              box-shadow: 0 8px 24px rgba(255, 51, 51, 0.2);
+            "
+          >
+            <i class="ph ph-trash"></i> Delete Account
+          </button>
+        </div>
+      </div>
+
+      <div class="onboarding-screen hidden" id="onboardingScreen">
+        <div class="onboarding-content">
+          <i class="ph ph-barbell onboarding-icon"></i>
+          <h1>Welcome to Builder</h1>
+          <p>Let's personalize your fitness journey.</p>
+          <form id="onboardingForm" class="onboarding-form">
+            <div class="input-group">
+              <label for="userName">Name</label>
+              <input
+                type="text"
+                id="userName"
+                required
+                placeholder="What should we call you?"
+              />
+            </div>
+            <div class="input-row">
+              <div class="input-group">
+                <label for="userAge">Age</label>
+                <input
+                  type="number"
+                  id="userAge"
+                  required
+                  placeholder="Years"
+                />
+              </div>
+              <div class="input-group">
+                <label for="userWeight">Weight</label>
+                <input
+                  type="number"
+                  id="userWeight"
+                  required
+                  placeholder="kg"
+                />
+              </div>
+            </div>
+            <button type="submit" class="save-cta" style="margin-top: 24px">
+              Start Logging <i class="ph ph-arrow-right"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div id="mainDashboard" class="dashboard-view hidden">
+        <header class="app-header">
+          <div class="header-top">
+            <div class="app-title" id="appTitle">Builder</div>
+            <div style="display: flex; gap: 12px; align-items: center">
+              <div class="date-badge" id="dateBadge" style="cursor: pointer">
+                Today
+              </div>
+              <button class="theme-toggle" id="themeToggle">
+                <i class="ph ph-sun"></i>
+              </button>
+              <button class="theme-toggle" id="profileBtn">
+                <i class="ph ph-user"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="weekly-goal">
+            <div class="goal-header">
+              <span>Weekly Goal</span>
+              <span id="weeklyGoalText">0/4</span>
+            </div>
+            <div class="goal-progress">
+              <div
+                class="goal-fill"
+                id="weeklyGoalFill"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+        </header>
+
+        <div
+          class="search-section"
+          style="position: relative; display: flex; gap: 8px"
+        >
+          <div class="search-bar" style="flex: 1">
+            <i class="ph ph-magnifying-glass"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Find exercise..."
+              autocomplete="off"
+            />
+          </div>
+          <button
+            id="btnCustomEx"
+            class="action-btn"
+            style="padding: 0 16px; height: auto"
+          >
+            <i class="ph ph-plus"></i> Custom
+          </button>
+
+          <!-- Mock Search Results -->
+          <div
+            class="search-results"
+            id="searchResults"
+            style="top: calc(100% + 8px); left: 0; right: 0"
+          >
+            <div
+              class="search-item"
+              data-name="Barbell Deadlift"
+              data-target="Legs & Back"
+            >
+              <div class="search-item-info">
+                <h4>Barbell Deadlift</h4>
+                <span>Legs & Back</span>
+              </div>
+              <button class="add-btn"><i class="ph ph-plus"></i></button>
+            </div>
+            <div
+              class="search-item"
+              data-name="Dumbbell Lunges"
+              data-target="Legs"
+            >
+              <div class="search-item-info">
+                <h4>Dumbbell Lunges</h4>
+                <span>Legs</span>
+              </div>
+              <button class="add-btn"><i class="ph ph-plus"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="main-content">
+          <div class="empty-state" id="emptyState">
+            <i class="ph ph-barbell empty-icon"></i>
+            <h3 class="empty-title">Build your routine</h3>
+            <p class="empty-desc">
+              Search for exercises above and<br />add them to your workout.
+            </p>
+          </div>
+
+          <div class="workout-list" id="workoutList">
+            <!-- Populated dynamically via calendar/data store -->
+          </div>
+        </div>
+
+        <div class="bottom-sticky">
+          <div class="sticky-header" id="stickyHeader">
+            <div class="progress-summary">
+              <div class="summary-item">
+                <span class="summary-label">Exercises</span>
+                <span class="summary-value" id="exCount">0</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Time</span>
+                <span class="summary-value" id="estTime">0m</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Volume</span>
+                <span class="summary-value" id="volCount">0kg</span>
+              </div>
+            </div>
+            <button class="expand-btn" id="expandStatsBtn">
+              <i class="ph ph-caret-up"></i>
+            </button>
+          </div>
+
+          <div class="dashboard-panel" id="dashboardPanel">
+            <div class="dashboard-wrapper">
+              <div class="dashboard-grid">
+                <div class="stat-card">
+                  <i class="ph ph-calendar-check"></i>
+                  <div class="stat-info">
+                    <span class="stat-title">Total Workouts</span>
+                    <span class="stat-value" id="dashTotalWorkouts">0</span>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <i class="ph ph-barbell"></i>
+                  <div class="stat-info">
+                    <span class="stat-title">Total Volume</span>
+                    <span class="stat-value" id="dashTotalVolume">0 kg</span>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <i class="ph ph-fire"></i>
+                  <div class="stat-info">
+                    <span class="stat-title">Current Streak</span>
+                    <span class="stat-value" id="dashStreak">0 Days</span>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <i class="ph ph-star"></i>
+                  <div class="stat-info">
+                    <span class="stat-title">Top Exercise</span>
+                    <span class="stat-value" id="dashTopEx">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="save-cta">
+            <i class="ph ph-check-circle"></i> Save Workout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
